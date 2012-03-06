@@ -16,3 +16,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+packages = node[:redmine][:requirements]
+
+packages.each do |pkg|
+  package pkg
+end
+
+git node[:redmine][:path] do
+  action :export
+  user 'www-data'
+  group 'www-data'
+end
+
+template "#{node[:redmine][:path]}/config" do
+  source "unicorn.conf"
+end
+
+service "unicorn" do
+  action :start
+end
+
+service "nginx" do
+  action :reload
+end
