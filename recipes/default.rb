@@ -37,6 +37,7 @@ rvm_environment "ruby-1.8.7-p330@redmine"
 rvm_gem "unicorn" do
   ruby_string "ruby-1.8.7-p330@redmine"
 end
+
 template "#{node[:redmine][:app_path}" do
   source ".rvmrc"
 end
