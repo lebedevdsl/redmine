@@ -1,6 +1,6 @@
 server {
   listen 80;
-  server_name <%= node[:redmine][:app_url] %>;
+  server_name <%= node[:redmine][:app_server_name] %>;
 
   upstream redmine {
     server unix:<%= node[:redmine][:app_path]+node[:redmine][:unicorn][:sock]%>
