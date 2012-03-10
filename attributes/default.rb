@@ -9,7 +9,7 @@ default[:redmine] = {
     :error_log => "unicorn.error.log"
     :access_log => "unicorn.access.log"
     :pid => "/tmp/pids/unicorn.pid", 
-    :sock => "/tmp/socks/unicorn.sock",
+    :sock => "/tmp/sockets/unicorn.sock",
     :error_log => "unicorn.error.log",
     :access_log => "unicorn.access.log",
     }
