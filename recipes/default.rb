@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe recipe[rvm]
+include_recipe 'rvm'
 
 packages = node[:redmine][:requirements]
 
