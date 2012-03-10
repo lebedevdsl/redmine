@@ -32,7 +32,7 @@ git node[:redmine][:path] do
   revision node[:redmine][:release_tag]
 end
 
-rvm_environment "1.8.7@redmine"
+rvm_environment "ruby-1.8.7-p330@redmine"
 
 template "#{node[:redmine][:app_path}" do
   source ".rvmrc"
