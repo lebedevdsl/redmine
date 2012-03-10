@@ -31,8 +31,6 @@ git node[:redmine][:path] do
   revision node[:redmine][:release_tag]
 end
 
-template "#{node[:redmine][:path]}/config" do
-  source "unicorn.conf"
 template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   source "unicorn.rb"
 end
