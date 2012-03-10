@@ -44,6 +44,8 @@ end
 
 service "unicorn" do
   action :start
+  pattern "unicorn_rails"
+  start_command "cd #{node[:redmine][:app_path]} && unicorn_rails -c config/unicorn.rb -E production -D"
 end
 
 service "nginx" do
