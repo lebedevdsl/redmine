@@ -15,4 +15,6 @@ default[:redmine] = {
     }
 }
 
+normal[:app_server_name] = "redmine"
+
 
