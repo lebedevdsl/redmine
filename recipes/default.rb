@@ -27,6 +27,8 @@ git node[:redmine][:path] do
   action :export
   user 'www-data'
   group 'www-data'
+  repository "git://github.com/edavis10/redmine"
+  revision node[:redmine][:release_tag]
 end
 
 template "#{node[:redmine][:path]}/config" do
