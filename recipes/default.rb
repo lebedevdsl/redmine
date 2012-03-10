@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe recipe[rvm]
 
 packages = node[:redmine][:requirements]
 
@@ -29,6 +30,12 @@ git node[:redmine][:path] do
   group 'www-data'
   repository "git://github.com/edavis10/redmine"
   revision node[:redmine][:release_tag]
+end
+
+rvm_environment "1.8.7@redmine"
+
+template "#{node[:redmine][:app_path}" do
+  source ".rvmrc"
 end
 
 template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
