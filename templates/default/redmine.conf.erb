@@ -1,0 +1,19 @@
+server {
+  listen 80;
+  server_name <%= node[:redmine][:app_url] %>;
+
+  upstream redmine {
+    server unix:<%= node[:redmine][:app_path]+node[:redmine][:unicorn][:sock]%>
+  }
+
+  location / {
+
+    root <%= node[:redmine][:app_path]%>/public;
+
+    try_files $uri @redmine
+  }
+  
+  loction @redmine {
+    proxy_pass http://redmine
+  }
+}
