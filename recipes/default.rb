@@ -40,14 +40,20 @@ end
 
 template "#{node[:redmine][:app_path]}/.rvmrc" do
   source ".rvmrc.erb"
+  owner "www-data"
+  group "www-data"
 end
 
 template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   source "unicorn.rb.erb"
+  owner "www-data"
+  group "www-data"
 end
 
 template "#{node[:redmine][:app_path]}/config/database.yml" do
   source "database.yml.erb"
+  owner "www-data"
+  group "www-data"
 end
 
 execute "cd #{node[:redmine][:app_path]} && rake db:migrate RAILS_ENV=production"
