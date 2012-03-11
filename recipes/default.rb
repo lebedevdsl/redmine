@@ -56,6 +56,8 @@ template "#{node[:redmine][:app_path]}/config/database.yml" do
   group "www-data"
 end
 
+execute "cd #{node[:redmine][:app_path]} && rake generate_session_store"
+
 execute "cd #{node[:redmine][:app_path]} && rake db:migrate RAILS_ENV=production"
 
 service "unicorn" do
