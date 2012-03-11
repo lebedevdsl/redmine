@@ -46,6 +46,12 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   source "unicorn.rb.erb"
 end
 
+template "#{node[:redmine][:app_path]}/config/database.yml" do
+  source "database.yml.erb"
+end
+
+execute "cd #{node[:redmine][:app_path]} && rake db:migrate RAILS_ENV=production"
+
 service "unicorn" do
   action :start
   pattern "unicorn_rails"
