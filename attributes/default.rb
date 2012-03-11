@@ -8,9 +8,9 @@ default[:redmine] = {
     :access_log => "unicorn.access.log"
     },
   :db => {
-    :db_name => "redmine"
-    :db_host => "localhost"
-    :db_user => "redmine"
+    :db_name => "redmine",
+    :db_host => "localhost",
+    :db_user => "redmine",
     :db_pass => ""
   }
 
@@ -18,9 +18,9 @@ default[:redmine] = {
 
 normal[:app_server_name] = "redmine"
 set[:redmine][:db] = {
-  :db_name => "redmine"
-  :db_host => "localhost"
-  :db_user => "redmine"
+  :db_name => "redmine",
+  :db_host => "localhost",
+  :db_user => "redmine",
   :db_pass => ""
 }
 
