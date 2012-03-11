@@ -24,7 +24,7 @@ include_recipe 'rvm::system_install'
 #  package pkg
 #end
 
-git node[:redmine][:path] do
+git node[:redmine][:app_path] do
   action :export
   user 'www-data'
   group 'www-data'
