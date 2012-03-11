@@ -18,11 +18,11 @@
 #
 include_recipe 'rvm::system_install'
 
-packages = node[:redmine][:requirements]
-
-packages.each do |pkg|
-  package pkg
-end
+#packages = node[:redmine][:requirements]
+#
+#packages.each do |pkg|
+#  package pkg
+#end
 
 git node[:redmine][:path] do
   action :export
