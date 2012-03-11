@@ -58,8 +58,5 @@ end
 
 link "/etc/nginx/sites-enabled/redmine.conf" do
   to "/etc/nginx/sites-available/redmine.conf"
-end
-
-service "nginx" do
-  action :reload
+  notifies :reload, resources(:service => "nginx")
 end
