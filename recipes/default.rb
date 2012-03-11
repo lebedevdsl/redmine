@@ -84,6 +84,10 @@ template "/etc/nginx/sites-available/redmine.conf" do
   source "redmine.conf.erb"
 end
 
+link "/var/www/virtual-hosts/redmine" do
+  to "/opt/redmine"
+end
+
 link "/etc/nginx/sites-enabled/redmine.conf" do
   to "/etc/nginx/sites-available/redmine.conf"
   notifies :reload, resources(:service => "nginx")

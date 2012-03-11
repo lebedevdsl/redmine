@@ -1,6 +1,6 @@
 default[:redmine] = {
   :release_tag => "1.3.1",
-  :app_path => "/var/www/virtual-hosts/redmine",
+  :app_path => "/opt/redmine",
   :unicorn_conf => {
     :pid => "/tmp/pids/unicorn.pid", 
     :sock => "/tmp/sockets/unicorn.sock",
