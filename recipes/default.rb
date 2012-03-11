@@ -38,6 +38,16 @@ rvm_gem "unicorn" do
   ruby_string "ruby-1.8.7-p330@redmine"
 end
 
+rvm_gem "rake" do
+  ruby_string "ruby-1.8.7-p330@redmine"
+  version "0.8.7"
+end
+
+rvm_gem "rails" do
+  ruby_string "ruby-1.8.7-p330@redmine"
+  version "2.3.14"
+end 
+
 template "#{node[:redmine][:app_path]}/.rvmrc" do
   source ".rvmrc.erb"
   owner "www-data"
