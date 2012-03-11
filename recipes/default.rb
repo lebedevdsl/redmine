@@ -72,11 +72,13 @@ template "#{node[:redmine][:app_path]}/config/database.yml" do
   group "www-data"
 end
 
-execute "rake generate_session_store" do
+execute "rake" do
+  command "rake generate_session_store"
   cwd node[:redmine][:app_path]
 end
 
-execute "rake db:migrate RAILS_ENV=production" do
+execute "rake" do
+  command "rake db:migrate RAILS_ENV=production"
   cwd node[:redmine][:app_path]
 end
 
