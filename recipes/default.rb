@@ -39,11 +39,11 @@ rvm_gem "unicorn" do
 end
 
 template "#{node[:redmine][:app_path]}/.rvmrc" do
-  source ".rvmrc"
+  source ".rvmrc.erb"
 end
 
 template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
-  source "unicorn.rb"
+  source "unicorn.rb.erb"
 end
 
 service "unicorn" do
