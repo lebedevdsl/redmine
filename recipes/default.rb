@@ -52,11 +52,14 @@ service "unicorn" do
   start_command "cd #{node[:redmine][:app_path]} && unicorn_rails -c config/unicorn.rb -E production -D"
 end
 
-template "#{node[:nginx][:dirs][:config]}/sites-available/redmine.conf" do
+template "/etc/nginx/sites-available/redmine.conf" do
   source "redmine.conf.erb"
 end
 
-link "#{node[:nginx][:dirs][:config]}/sites-enabled/redmine.conf" do
-  to "#{node[:nginx][:dirs][:config]}/sites-available/redmine.conf"
-  notifies :reload, resources(:service => node[:nginx][:service])
+link "/etc/nginx/sites-enabled/redmine.conf" do
+  to "/etc/nginx/sites-available/redmine.conf"
+end
+
+service "nginx" do
+  action :reload
 end
