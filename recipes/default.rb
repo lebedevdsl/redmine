@@ -18,11 +18,6 @@
 #
 include_recipe 'rvm::system_install'
 
-#packages = node[:redmine][:requirements]
-#
-#packages.each do |pkg|
-#  package pkg
-#end
 REDMINE_RUBY = "ruby-1.8.7-p330@redmine"
 REQUIRED_GEMS = {
   "rake"    => "0.8.7",
