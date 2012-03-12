@@ -54,7 +54,7 @@ end
 rvm_environment REDMINE_RUBY
 
 REQUIRED_GEMS.each do |gem, version|
-  rvm_gems gem do
+  rvm_gem gem do
     ruby_string REDMINE_RUBY
     version version if version
   end
