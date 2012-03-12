@@ -17,7 +17,7 @@ default[:redmine] = {
 
 }
 
-normal[:app_server_name] = "redmine"
+set_unless[:redmine][:app_server_name] = "redmine.#{node[:fqdn]}"
 set_unless[:redmine][:db] = {
   :db_name => "",
   :db_host => "",
