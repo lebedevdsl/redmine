@@ -8,7 +8,7 @@ default[:redmine] = {
     :access_log => "unicorn.access.log"
     },
   :db => {
-    :type => "mysql"
+    :type => "mysql",
     :db_name => "redmine",
     :db_host => "localhost",
     :db_user => "redmine",
