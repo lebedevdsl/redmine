@@ -23,4 +23,4 @@ set[:redmine][:db] = {
   :db_user => "redmine",
   :db_pass => ""
 }
-
+node[:rvm][:version] = "1.7.0"
