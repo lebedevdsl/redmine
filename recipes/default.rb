@@ -66,6 +66,8 @@ template "#{node[:redmine][:app_path]}/.rvmrc" do
   group "www-data"
 end
 
+execute "rvm rvmrc trust #{node[:redmine][:app_path]}"
+
 template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   source "unicorn.rb.erb"
   owner "www-data"
