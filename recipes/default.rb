@@ -24,6 +24,12 @@ include_recipe 'rvm::system_install'
 #  package pkg
 #end
 REDMINE_RUBY = "ruby-1.8.7-p330@redmine"
+REQUIRED_GEMS = {
+  "rake"    => "0.8.7",
+  "rails"   => "2.3.14",
+  "unicorn" => nil
+  }
+
 
 directory node[:redmine][:app_path] do
   action :create
@@ -41,19 +47,12 @@ end
 
 rvm_environment REDMINE_RUBY
 
-rvm_gem "unicorn" do
-  ruby_string "ruby-1.8.7-p330@redmine"
+REQUIRED_GEMS.each do |gem, version|
+  rvm_gems gem do
+    ruby_string REDMINE_RUBY
+    version version if version
+  end
 end
-
-rvm_gem "rake" do
-  ruby_string "ruby-1.8.7-p330@redmine"
-  version "0.8.7"
-end
-
-rvm_gem "rails" do
-  ruby_string "ruby-1.8.7-p330@redmine"
-  version "2.3.14"
-end 
 
 template "#{node[:redmine][:app_path]}/.rvmrc" do
   source ".rvmrc.erb"
