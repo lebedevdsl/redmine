@@ -30,6 +30,12 @@ REQUIRED_GEMS = {
   "unicorn" => nil
   }
 
+service "unicorn_rails" do
+  supports :restart => true
+  action :nothing
+  start_command "cd #{node[:redmine][:app_path]} && unicorn_rails -c config/unicorn.rb -E production -D"
+  stop_command "killall unicorn_rails"
+end
 
 directory node[:redmine][:app_path] do
   action :create
@@ -80,12 +86,7 @@ end
 execute "rake" do
   command "rake db:migrate RAILS_ENV=production"
   cwd node[:redmine][:app_path]
-end
-
-service "unicorn" do
-  action :start
-  pattern "unicorn_rails"
-  start_command "cd #{node[:redmine][:app_path]} && unicorn_rails -c config/unicorn.rb -E production -D"
+  notifies :restart, resources(:service => "unicorn_rails")
 end
 
 template "/etc/nginx/sites-available/redmine.conf" do
