@@ -87,14 +87,12 @@ template "#{node[:redmine][:app_path]}/config/database.yml" do
 end
 
 rvm_shell "rake_task:generate_session_store" do
-  interpreter "bash"
   ruby_string REDMINE_RUBY
   cwd node[:redmine][:app_path]
   code "rake generate_session_store"
 end
 
 rvm_shell "rake_task:db:migrate RAILS_ENV=production" do
-  interpreter "bash"
   ruby_string REDMINE_RUBY
   cwd node[:redmine][:app_path]
   code "rake db:migrate RAILS_ENV=production"
