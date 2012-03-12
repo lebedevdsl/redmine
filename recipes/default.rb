@@ -27,7 +27,8 @@ REDMINE_RUBY = "ruby-1.8.7-p330@redmine"
 REQUIRED_GEMS = {
   "rake"    => "0.8.7",
   "rails"   => "2.3.14",
-  "unicorn" => nil
+  "unicorn" => nil,
+  "rubytree" => nil
   }
 
 service "unicorn_rails" do
