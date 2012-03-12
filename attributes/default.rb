@@ -9,18 +9,18 @@ default[:redmine] = {
     },
   :db => {
     :type => "mysql",
-    :db_name => "redmine",
-    :db_host => "localhost",
-    :db_user => "redmine",
+    :db_name => "",
+    :db_host => "",
+    :db_user => "",
     :db_pass => ""
   }
 
 }
 
 normal[:app_server_name] = "redmine"
-set[:redmine][:db] = {
-  :db_name => "redmine",
-  :db_host => "localhost",
-  :db_user => "redmine",
+set_unless[:redmine][:db] = {
+  :db_name => "",
+  :db_host => "",
+  :db_user => "",
   :db_pass => ""
 }

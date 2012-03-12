@@ -95,11 +95,13 @@ rvm_shell "rake_task:generate_session_store" do
   code "rake generate_session_store"
 end
 
-rvm_shell "rake_task:db:migrate RAILS_ENV=production" do
-  ruby_string REDMINE_RUBY
-  cwd node[:redmine][:app_path]
-  code "rake db:migrate RAILS_ENV=production"
-  notifies :restart, resources(:service => "unicorn_rails")
+unless node[:redmine][:db].any?{|key, value| value==""}
+  rvm_shell "rake_task:db:migrate RAILS_ENV=production" do
+    ruby_string REDMINE_RUBY
+    cwd node[:redmine][:app_path]
+    code "rake db:migrate RAILS_ENV=production"
+    notifies :restart, resources(:service => "unicorn_rails")
+  end
 end
 
 template "/etc/nginx/sites-available/redmine.conf" do
