@@ -95,7 +95,7 @@ script"rake_task:generate_session_store" do
   EOF
 end
 
-execute "rake_task:db:migrate RAILS_ENV=production" do
+script "rake_task:db:migrate RAILS_ENV=production" do
   interpreter "bash"
   cwd node[:redmine][:app_path]
   code <<-EOF
