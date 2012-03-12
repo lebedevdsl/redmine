@@ -23,6 +23,7 @@ include_recipe 'rvm::system_install'
 #packages.each do |pkg|
 #  package pkg
 #end
+REDMINE_RUBY = "ruby-1.8.7-p330@redmine"
 
 directory node[:redmine][:app_path] do
   action :create
@@ -38,7 +39,7 @@ git node[:redmine][:app_path] do
   revision node[:redmine][:release_tag]
 end
 
-rvm_environment "ruby-1.8.7-p330@redmine"
+rvm_environment REDMINE_RUBY
 
 rvm_gem "unicorn" do
   ruby_string "ruby-1.8.7-p330@redmine"
