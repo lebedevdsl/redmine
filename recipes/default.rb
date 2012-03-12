@@ -23,7 +23,7 @@ REQUIRED_GEMS = {
   "rake"    => "0.8.7",
   "rails"   => "2.3.14",
   "unicorn" => nil,
-  "rubytree" => nil
+  "rubytree" => "0.5.2" 
   }
 
 service "unicorn_rails" do
