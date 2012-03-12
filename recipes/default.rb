@@ -86,14 +86,22 @@ template "#{node[:redmine][:app_path]}/config/database.yml" do
   group "www-data"
 end
 
-execute "rake" do
-  command "rake generate_session_store"
+script"rake_task:generate_session_store" do
+  interpreter "bash"
   cwd node[:redmine][:app_path]
+  code <<-EOF
+  source /etc/profile
+  rake generate_session_store
+  EOF
 end
 
-execute "rake" do
-  command "rake db:migrate RAILS_ENV=production"
+execute "rake_task:db:migrate RAILS_ENV=production" do
+  interpreter "bash"
   cwd node[:redmine][:app_path]
+  code <<-EOF
+  source /etc/profile
+  rake db:migrate RAILS_ENV=production
+  EOF
   notifies :restart, resources(:service => "unicorn_rails")
 end
 
