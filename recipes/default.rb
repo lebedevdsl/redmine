@@ -20,7 +20,7 @@ include_recipe 'rvm::system_install'
 
 case node[:redmine][:db][:type]
 when "mysql"
-  include_recipe 'mysql::client'
+  package 'mysql-client'
   package "libmysqlclient-dev"
 end
 
