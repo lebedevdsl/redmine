@@ -114,5 +114,7 @@ end
 
 link "/etc/nginx/sites-enabled/redmine.conf" do
   to "/etc/nginx/sites-available/redmine.conf"
-  notifies :reload, resources(:service => "nginx")
+  if node[:nginx]
+    notifies :reload, resources(:service => "nginx")
+  end
 end
