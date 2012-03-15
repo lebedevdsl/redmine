@@ -109,7 +109,7 @@ template "/etc/nginx/sites-available/redmine.conf" do
 end
 
 link "/var/www/virtual-hosts/redmine" do
-  to "/opt/redmine"
+  to node[:redmine][:app_path]
 end
 
 link "/etc/nginx/sites-enabled/redmine.conf" do
