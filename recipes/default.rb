@@ -1,4 +1,3 @@
-#
 # Cookbook Name:: redmine
 # Recipe:: default
 #
@@ -16,14 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe 'rvm::system_install'
-
-case node[:redmine][:db][:type]
-when "mysql"
-  package 'mysql-client'
-  package "libmysqlclient-dev"
-end
-
 REDMINE_RUBY = "ruby-1.8.7-p330@redmine"
 REQUIRED_GEMS = {
   "rake"    => "0.8.7",
@@ -33,6 +24,14 @@ REQUIRED_GEMS = {
   "rubytree" => "0.5.2" ,
   "mysql" => nil
   }
+
+include_recipe 'rvm::system_install'
+
+case node[:redmine][:db][:type]
+when "mysql"
+  package 'mysql-client'
+  package "libmysqlclient-dev"
+end
 
 service "unicorn_rails" do
   supports :restart => true
