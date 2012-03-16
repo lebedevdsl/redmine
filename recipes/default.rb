@@ -39,8 +39,6 @@ end
 service "unicorn_rails" do
   supports :restart => true
   action :nothing
-  start_command "cd #{node[:redmine][:app_path]} && unicorn_rails -c config/unicorn.rb -E production -D"
-  stop_command "killall unicorn_rails"
 end
 
 directory node[:redmine][:app_path] do
