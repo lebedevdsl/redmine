@@ -36,7 +36,7 @@ when "mysql"
   package "libmysqlclient-dev"
 end
 
-service "unicorn_rails" do
+service "unicorn_redmine" do
   supports :restart => true
   action :nothing
 end
@@ -82,6 +82,12 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   source "unicorn.rb.erb"
   owner "www-data"
   group "www-data"
+end
+
+template "/etc/init.d/unicorn_redmine" do
+  source "unicorn_init_script.erb"
+  owner  "root"
+  group  "root"
 end
 
 template "#{node[:redmine][:app_path]}/config/database.yml" do
