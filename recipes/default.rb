@@ -88,6 +88,7 @@ template "/etc/init.d/unicorn_redmine" do
   source "unicorn_init_script.erb"
   owner  "root"
   group  "root"
+  mode   "0755"
 end
 
 template "#{node[:redmine][:app_path]}/config/database.yml" do
