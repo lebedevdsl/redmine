@@ -108,7 +108,7 @@ unless node[:redmine][:db].any?{|key, value| value == ""}
     ruby_string REDMINE_RUBY
     cwd node[:redmine][:app_path]
     code "rake db:migrate RAILS_ENV=production"
-    notifies :restart, resources(:service => "unicorn_rails")
+    notifies :restart, resources(:service => "unicorn_redmine")
   end
 end
 
