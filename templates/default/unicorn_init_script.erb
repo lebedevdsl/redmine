@@ -41,7 +41,7 @@ oldsig () {
 
 case ${1-help} in
     start)
-        sig 0 && decho "Already running" && exit 0
+        sig 0 && echo "Already running" && exit 0
         run $APP_ROOT $GEM_HOME $UNICORN_OPTS
         exit
     ;;
