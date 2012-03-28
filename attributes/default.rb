@@ -13,8 +13,8 @@ default[:redmine] = {
     :db_host => "",
     :db_user => "",
     :db_pass => ""
-  }
-
+  },
+  :ruby => "ruby-1.8.7-p330@redmine"
 }
 
 set_unless[:redmine][:app_server_name] = "redmine.#{node[:fqdn]}"

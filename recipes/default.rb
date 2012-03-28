@@ -18,7 +18,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-REDMINE_RUBY = "ruby-1.8.7-p330@redmine"
+REDMINE_RUBY = node[:redmine][:ruby]
 REQUIRED_GEMS = {
   "rake"    => "0.8.7",
   "rails"   => "2.3.14",
