@@ -82,19 +82,21 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   source "unicorn.rb.erb"
   owner "www-data"
   group "www-data"
+  mode  "0644"
 end
 
 template "/etc/init.d/unicorn_redmine" do
   source "unicorn_init_script.erb"
   owner  "root"
   group  "root"
-  mode   "0755"
+  mode   "0700"
 end
 
 template "#{node[:redmine][:app_path]}/config/database.yml" do
   source "database.yml.erb"
   owner "www-data"
   group "www-data"
+  mode  "0644"
 end
 
 rvm_shell "rake_task:generate_session_store" do
