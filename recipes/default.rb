@@ -119,10 +119,10 @@ end
 link "/var/www/virtual-hosts/redmine" do
   to node[:redmine][:app_path]
 end
-
-link "/etc/nginx/sites-enabled/redmine.conf" do
-  to "/etc/nginx/sites-available/redmine.conf"
-  if node[:nginx]
+  
+if node[:nginx]
+  link "/etc/nginx/sites-enabled/redmine.conf" do
+    to "/etc/nginx/sites-available/redmine.conf"
     notifies :reload, resources(:service => "nginx")
   end
 end
