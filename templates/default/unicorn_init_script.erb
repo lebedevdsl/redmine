@@ -1,33 +1,35 @@
 #!/bin/bash
 
 ### BEGIN INIT INFO
-# Provides: tuvocabulario.com
+# Provides: unicorn4redmine 
 # Required-Start: $all
 # Required-Stop: $network $local_fs $syslog
 # Default-Start: 2 3 4 5
 # Default-Stop: 0 1 6
 # Short-Description: Start the APPLICATION unicorns at boot
-# Description: Enable tuvocabulario.com at boot time.
+# Description: Enable unicorn4redmine at boot time.
 ### END INIT INFO
 
 set -u
 set -e
+declare -r REDMINE_RUBY="<%=node[:redmine][:ruby]%>"
+declare -r APP_NAME="redmine-<%=node[:redmine][:release_tag]%>"
+declare -r APP_ROOT="<%=node[:redmine][:app_path]%>"
+declare -r PID="$APP_ROOT<%=node[:redmine][:unicorn_conf][:pid]%>"
+declare -r ENV=production
+declare -r old_pid="$PID.oldbin"
+declare -r GEM_HOME="/usr/local/rvm/gems/$REDMINE_RUBY"
+declare -r UNICORN_OPTS="-D -E $ENV -c $APP_ROOT/config/unicorn.rb"
 
-APP_NAME="redmine-<%=node[:redmine][:release_tag]%>"
-APP_ROOT=<%=node[:redmine][:app_path]%>
-PID="$APP_ROOT<%=node[:redmine][:unicorn_conf][:pid]%>"
-ENV=production
-
-GEM_HOME="/usr/local/rvm/gems/ruby-1.8.7-p330"
-
-UNICORN_OPTS="-D -E $ENV -c $APP_ROOT/config/unicorn.rb"
-
-SET_PATH="cd $APP_ROOT; export GEM_HOME=$GEM_HOME"
-CMD="$SET_PATH; $GEM_HOME/bin/unicorn_rails $UNICORN_OPTS"
-
-old_pid="$PID.oldbin"
+export GEM_HOME
 
 cd $APP_ROOT || exit 1
+
+alias decho = echo >&2 
+
+run () {
+  cd $1 && $2/bin/unicorn_rails $3   
+}
 
 sig () {
   test -s "$PID" && kill -$1 `cat $PID`
@@ -38,34 +40,37 @@ oldsig () {
 }
 
 case ${1-help} in
-start)
-sig 0 && echo >&2 "Already running" && exit 0
-$CMD
-;;
-stop)
-sig QUIT && exit 0
-echo >&2 "Not running"
-;;
-force-stop)
-sig TERM && exit 0
-echo >&2 "Not running"
-;;
-restart|reload)
-sig HUP && echo reloaded OK && exit 0
-echo >&2 "Couldn't reload, starting '$CMD' instead"
-$CMD
-;;
-upgrade)
-sig USR2 && exit 0
-echo >&2 "Couldn't upgrade, starting '$CMD' instead"
-$CMD
-;;
-rotate)
-sig USR1 && echo rotated logs OK && exit 0
-echo >&2 "Couldn't rotate logs" && exit 1
-;;
-*)
-echo >&2 "Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
-exit 1
-;;
+    start)
+        sig 0 && decho "Already running" && exit 0
+        run $APP_ROOT $GEM_HOME $UNICORN_OPTS
+        exit
+    ;;
+    stop)
+        sig QUIT && exit 0
+        decho "Not running"
+    ;;
+    force-stop)
+        sig TERM && exit 0
+        decho "Not running"
+    ;;
+    restart|reload)
+        sig HUP && echo reloaded OK && exit 0
+        decho "Couldn't reload, starting unicorn instead"
+        run $APP_ROOT $GEM_HOME $UNICORN_OPTS
+        exit
+    ;;
+    upgrade)
+        sig USR2 && exit 0
+        decho "Couldn't upgrade, starting unicorn instead"
+        run $APP_ROOT $GEM_HOME $UNICORN_OPTS
+        exit
+    ;;
+    rotate)
+        sig USR1 && echo rotated logs OK && exit 0
+        decho "Couldn't rotate logs" && exit 1
+    ;;
+    *)
+        decho "Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
+        exit 1
+    ;;
 esac
