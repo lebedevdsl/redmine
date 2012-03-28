@@ -54,7 +54,7 @@ case ${1-help} in
         decho "Not running"
     ;;
     restart|reload)
-        sig HUP && echo reloaded OK && exit 0
+        sig HUP && echo "reloaded OK" && exit 0
         decho "Couldn't reload, starting unicorn instead"
         run $APP_ROOT $GEM_HOME $UNICORN_OPTS
         exit
@@ -66,7 +66,7 @@ case ${1-help} in
         exit
     ;;
     rotate)
-        sig USR1 && echo rotated logs OK && exit 0
+        sig USR1 && echo "rotated logs OK" && exit 0
         decho "Couldn't rotate logs" && exit 1
     ;;
     *)
