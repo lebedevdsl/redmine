@@ -83,6 +83,12 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   owner "www-data"
   group "www-data"
   mode  "0644"
+template "#{node[:redmine][:app_path]}/config/configuration.yml" do
+  source "configuration.yml.erb"
+  owner "www-data"
+  group "www-data"
+  mode  "0644"
+  notifies :reload, resources(:service => "unicorn_redmine")
 end
 
 template "/etc/init.d/unicorn_redmine" do
