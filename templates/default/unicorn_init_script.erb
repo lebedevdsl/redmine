@@ -25,7 +25,7 @@ export GEM_HOME
 
 cd $APP_ROOT || exit 1
 
-alias decho=echo >&2 
+alias decho="echo >&2" 
 
 run () {
   cd $APP_ROOT && $GEM_HOME/bin/unicorn_rails $UNICORN_OPTS
