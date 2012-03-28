@@ -37,7 +37,7 @@ when "mysql"
 end
 
 service "unicorn_redmine" do
-  supports :restart => true
+  supports :restart => true, :reload => true
   action :nothing
 end
 
