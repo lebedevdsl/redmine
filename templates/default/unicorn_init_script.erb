@@ -70,7 +70,7 @@ case ${1-help} in
         decho "Couldn't rotate logs" && exit 1
     ;;
     *)
-        decho "Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
+        echo "Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
         exit 1
     ;;
 esac
