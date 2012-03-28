@@ -42,7 +42,7 @@ oldsig () {
 case ${1-help} in
     start)
         sig 0 && echo "Already running" && exit 0
-        run $APP_ROOT $GEM_HOME $UNICORN_OPTS
+        run 
         exit
     ;;
     stop)
@@ -56,13 +56,13 @@ case ${1-help} in
     restart|reload)
         sig HUP && echo "reloaded OK" && exit 0
         decho "Couldn't reload, starting unicorn instead"
-        run $APP_ROOT $GEM_HOME $UNICORN_OPTS
+        run 
         exit
     ;;
     upgrade)
         sig USR2 && exit 0
         decho "Couldn't upgrade, starting unicorn instead"
-        run $APP_ROOT $GEM_HOME $UNICORN_OPTS
+        run 
         exit
     ;;
     rotate)
