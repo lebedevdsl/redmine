@@ -39,6 +39,7 @@ end
 service "unicorn_redmine" do
   supports :restart => true, :reload => true
   action :nothing
+  subscribes :start, resources(:template => "#{node[:redmine][:app_path]}/config/unicorn.rb"), :immediately
 end
 
 directory node[:redmine][:app_path] do
@@ -83,6 +84,9 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   owner "www-data"
   group "www-data"
   mode  "0644"
+  notifies :reload, resources(:service => "unicorn_redmine")
+end
+
 template "#{node[:redmine][:app_path]}/config/configuration.yml" do
   source "configuration.yml.erb"
   owner "www-data"
