@@ -115,6 +115,12 @@ template "#{node[:redmine][:app_path]}/config/database.yml" do
   mode  "0644"
 end
 
+directory "#{node[:redmine][:app_path]}/public/plugin_assets" do
+  owner "www-data"
+  group "www-data"
+  mode  "0755"
+end
+
 rvm_shell "rake_task:generate_session_store" do
   ruby_string REDMINE_RUBY
   cwd node[:redmine][:app_path]
