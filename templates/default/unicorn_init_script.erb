@@ -41,36 +41,36 @@ oldsig () {
 
 case ${1-help} in
     start)
-        sig 0 && echo "Already running" && exit 0
-        run 
+        sig 0 && echo "[Unicorn @ redmine] already running" && exit 0
+        run && echo "[Unicorn @ Redmine] now up and running - OK"
         exit
     ;;
     stop)
-        sig QUIT && exit 0
+        sig QUIT && echo "[Unicorn @ Redmine] stopped - OK" exit 0 
         decho "Not running"
     ;;
     force-stop)
         sig TERM && exit 0
         decho "Not running"
     ;;
-    restart|reload)
-        sig HUP && echo "reloaded OK" && exit 0
+    restart)
+        sig QUIT && echo "[Unicorn @ Redmine] restarting - OK"
+        run && echo "[Unicorn @ Redmine] now up and running - OK"
+        exit
+    ;;
+    
+    reload)
+        sig HUP && echo "[Unicorn @ Redmine] reloaded - OK" && exit 0
         decho "Couldn't reload, starting unicorn instead"
         run 
         exit
     ;;
-    upgrade)
-        sig USR2 && exit 0
-        decho "Couldn't upgrade, starting unicorn instead"
-        run 
-        exit
-    ;;
     rotate)
-        sig USR1 && echo "rotated logs OK" && exit 0
+        sig USR1 && echo "[Unicorn @ Redmine] rotated logs - OK" && exit 0
         decho "Couldn't rotate logs" && exit 1
     ;;
     *)
-        echo "Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
+        echo "Usage: $0 <start|stop|restart|rotate|force-stop>"
         exit 1
     ;;
 esac
