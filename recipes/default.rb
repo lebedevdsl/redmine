@@ -29,6 +29,13 @@ REQUIRED_GEMS = {
   }
 
 # Optional prerequisites for RMagick
+if node[:redmine][:rmagick] == "enabled"
+  package "libmagick9-dev"
+  rvm_gem "rmagick" do
+    ruby_string node[:redmine][:ruby]
+  end
+end
+
 include_recipe 'rvm::system_install'
 
 # Automatically select and install prerequisites for db support
@@ -69,13 +76,6 @@ REQUIRED_GEMS.each do |gem, version|
   rvm_gem gem do
     ruby_string node[:redmine][:ruby]
     version version if version
-  end
-end
-
-if node[:redmine][:rmagick] == "enabled"
-  package "libmagick9-dev"
-  rvm_gem "rmagick" do
-    ruby_string REDMINE_RUBY
   end
 end
 
