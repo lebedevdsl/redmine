@@ -36,6 +36,7 @@ if node[:redmine][:rmagick] == "enabled"
   end
 end
 
+# Using https://github.com/fnichol/chef-rvm rvm::system_install
 include_recipe 'rvm::system_install'
 
 # Automatically select and install prerequisites for db support
