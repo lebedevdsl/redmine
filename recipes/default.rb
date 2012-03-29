@@ -18,6 +18,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# Defining requirements
 REQUIRED_GEMS = {
   "rake"    => "0.8.7",
   "rails"   => "2.3.14",
@@ -27,25 +28,31 @@ REQUIRED_GEMS = {
   "mysql" => nil
   }
 
+# Optional prerequisites for RMagick
 include_recipe 'rvm::system_install'
 
+# Automatically select and install prerequisites for db support
+# according to attributes. Defaults to mysql
 case node[:redmine][:db][:type]
 when "mysql"
   package 'mysql-client'
   package "libmysqlclient-dev"
 end
 
+# Unnicorn for redmine service definition
 service "unicorn_redmine" do
   supports :restart => true, :reload => true
   action :nothing
 end
 
+# Ensure app-directory is present and have right ownership
 directory node[:redmine][:app_path] do
   action :create
   owner "www-data"
   group "www-data"
 end
 
+# Exporting defined redmine version from git mirror https://github.com/redmine/redmine
 git node[:redmine][:app_path] do
   action :export
   user 'www-data'
@@ -54,8 +61,10 @@ git node[:redmine][:app_path] do
   revision node[:redmine][:release_tag]
 end
 
+# Installing rvm 1.8.7 ruby and creating gemset
 rvm_environment node[:redmine][:ruby]
 
+# Installing gems for rvm environment
 REQUIRED_GEMS.each do |gem, version|
   rvm_gem gem do
     ruby_string node[:redmine][:ruby]
@@ -70,12 +79,14 @@ if node[:redmine][:rmagick] == "enabled"
   end
 end
 
+# Deploying rvm env autoswitcher to app_path
 template "#{node[:redmine][:app_path]}/.rvmrc" do
   source ".rvmrc.erb"
   owner "www-data"
   group "www-data"
 end
 
+# Custom force-trust for .rvmrc
 script "trust_rvmrc" do 
   interpreter "bash"
   code <<-EOF
@@ -84,6 +95,7 @@ script "trust_rvmrc" do
   EOF
 end
 
+# Unicorn w/rvm for redmine init-script
 template "/etc/init.d/unicorn_redmine" do
   source "unicorn_init_script.erb"
   owner  "root"
@@ -91,6 +103,7 @@ template "/etc/init.d/unicorn_redmine" do
   mode   "0700"
 end
 
+# Redmine configuration for SCM and mailing
 template "#{node[:redmine][:app_path]}/config/configuration.yml" do
   source "configuration.yml.erb"
   owner "www-data"
@@ -99,6 +112,7 @@ template "#{node[:redmine][:app_path]}/config/configuration.yml" do
   notifies :reload, resources(:service => "unicorn_redmine")
 end
 
+# Redmine unicorn configuration
 template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   source "unicorn.rb.erb"
   owner "www-data"
@@ -107,6 +121,7 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   notifies :restart, resources(:service => "unicorn_redmine"), :immediately
 end
 
+# Redmine database configuration
 template "#{node[:redmine][:app_path]}/config/database.yml" do
   source "database.yml.erb"
   owner "www-data"
@@ -114,18 +129,21 @@ template "#{node[:redmine][:app_path]}/config/database.yml" do
   mode  "0644"
 end
 
+# fix ownership for public/plugin_assets due to deployment order
 directory "#{node[:redmine][:app_path]}/public/plugin_assets" do
   owner "www-data"
   group "www-data"
   mode  "0755"
 end
 
+# http://www.redmine.org/projects/redmine/wiki/RedmineInstall step 4
 rvm_shell "rake_task:generate_session_store" do
   ruby_string node[:redmine][:ruby]
   cwd node[:redmine][:app_path]
   code "rake generate_session_store"
 end
 
+# http://www.redmine.org/projects/redmine/wiki/RedmineInstall step 5 - migrating DB 
 unless node[:redmine][:db].any?{|key, value| value == ""}
   rvm_shell "rake_task:db:migrate RAILS_ENV=production" do
     ruby_string node[:redmine][:ruby]
@@ -135,14 +153,17 @@ unless node[:redmine][:db].any?{|key, value| value == ""}
   end
 end
 
+# Nginx configuration
 template "/etc/nginx/sites-available/redmine.conf" do
   source "redmine.conf.erb"
 end
 
+# linking app_path to default virtual-hosts location
 link "/var/www/virtual-hosts/redmine" do
   to node[:redmine][:app_path]
 end
 
+# In case of nginx recipe usage - reload nginx after linking available to enabled
 if node[:nginx]
   link "/etc/nginx/sites-enabled/redmine.conf" do
     to "/etc/nginx/sites-available/redmine.conf"
