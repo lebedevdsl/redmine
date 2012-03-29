@@ -18,7 +18,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-REDMINE_RUBY = node[:redmine][:ruby]
 REQUIRED_GEMS = {
   "rake"    => "0.8.7",
   "rails"   => "2.3.14",
@@ -55,11 +54,11 @@ git node[:redmine][:app_path] do
   revision node[:redmine][:release_tag]
 end
 
-rvm_environment REDMINE_RUBY
+rvm_environment node[:redmine][:ruby]
 
 REQUIRED_GEMS.each do |gem, version|
   rvm_gem gem do
-    ruby_string REDMINE_RUBY
+    ruby_string node[:redmine][:ruby]
     version version if version
   end
 end
@@ -122,14 +121,14 @@ directory "#{node[:redmine][:app_path]}/public/plugin_assets" do
 end
 
 rvm_shell "rake_task:generate_session_store" do
-  ruby_string REDMINE_RUBY
+  ruby_string node[:redmine][:ruby]
   cwd node[:redmine][:app_path]
   code "rake generate_session_store"
 end
 
 unless node[:redmine][:db].any?{|key, value| value == ""}
   rvm_shell "rake_task:db:migrate RAILS_ENV=production" do
-    ruby_string REDMINE_RUBY
+    ruby_string node[:redmine][:ruby]
     cwd node[:redmine][:app_path]
     code "rake db:migrate RAILS_ENV=production"
     notifies :restart, resources(:service => "unicorn_redmine")
@@ -143,7 +142,7 @@ end
 link "/var/www/virtual-hosts/redmine" do
   to node[:redmine][:app_path]
 end
-  
+
 if node[:nginx]
   link "/etc/nginx/sites-enabled/redmine.conf" do
     to "/etc/nginx/sites-available/redmine.conf"
