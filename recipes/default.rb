@@ -40,6 +40,7 @@ include_recipe 'rvm::system_install'
 
 # Automatically select and install prerequisites for db support
 # according to attributes. Defaults to mysql
+# TODO: postgresql
 case node[:redmine][:db][:type]
 when "mysql"
   package 'mysql-client'
@@ -122,6 +123,7 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
 end
 
 # Redmine database configuration
+# TODO: postgresql
 template "#{node[:redmine][:app_path]}/config/database.yml" do
   source "database.yml.erb"
   owner "www-data"
