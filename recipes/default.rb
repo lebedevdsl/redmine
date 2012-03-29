@@ -64,6 +64,13 @@ REQUIRED_GEMS.each do |gem, version|
   end
 end
 
+if node[:redmine][:rmagick] == "enabled"
+  package "libmagick9-dev"
+  rvm_gem "rmagick" do
+    ruby_string REDMINE_RUBY
+  end
+end
+
 template "#{node[:redmine][:app_path]}/.rvmrc" do
   source ".rvmrc.erb"
   owner "www-data"
