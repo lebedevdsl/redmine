@@ -78,6 +78,13 @@ script "trust_rvmrc" do
   EOF
 end
 
+template "/etc/init.d/unicorn_redmine" do
+  source "unicorn_init_script.erb"
+  owner  "root"
+  group  "root"
+  mode   "0700"
+end
+
 template "#{node[:redmine][:app_path]}/config/configuration.yml" do
   source "configuration.yml.erb"
   owner "www-data"
@@ -92,13 +99,6 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   group "www-data"
   mode  "0644"
   notifies :restart, resources(:service => "unicorn_redmine"), :immediately
-end
-
-template "/etc/init.d/unicorn_redmine" do
-  source "unicorn_init_script.erb"
-  owner  "root"
-  group  "root"
-  mode   "0700"
 end
 
 template "#{node[:redmine][:app_path]}/config/database.yml" do
