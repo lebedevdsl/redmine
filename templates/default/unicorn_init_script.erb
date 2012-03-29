@@ -17,15 +17,13 @@ declare -r APP_NAME="redmine-<%=node[:redmine][:release_tag]%>"
 declare -r APP_ROOT="<%=node[:redmine][:app_path]%>"
 declare -r PID="$APP_ROOT<%=node[:redmine][:unicorn_conf][:pid]%>"
 declare -r ENV=production
-declare -r old_pid="$PID.oldbin"
 declare -r GEM_HOME="/usr/local/rvm/gems/$REDMINE_RUBY"
 declare -r UNICORN_OPTS="-D -E $ENV -c $APP_ROOT/config/unicorn.rb"
+declare -r oldpid="$PID.oldbin"
 
 export GEM_HOME
 
 cd $APP_ROOT || exit 1
-
-alias decho="echo >&2" 
 
 run () {
   cd $APP_ROOT && $GEM_HOME/bin/unicorn_rails $UNICORN_OPTS
@@ -35,42 +33,43 @@ sig () {
   test -s "$PID" && kill -$1 `cat $PID`
 }
 
-oldsig () {
-  test -s $old_pid && kill -$1 `cat $old_pid`
+oldsig() {
+  test -s "$oldpid" && kill -$1 `cat $oldpid`
 }
 
 case ${1-help} in
+    status)
+        sig 0 && echo "[Unicorn @ Redmine] running in $APP_ROOT pid `cat $PID` " && exit 0
+        echo "[Unicorn @ Redmine] stopped" && exit 0
+    ;;
     start)
         sig 0 && echo "[Unicorn @ redmine] already running" && exit 0
         run && echo "[Unicorn @ Redmine] now up and running - OK"
         exit
     ;;
     stop)
-        sig QUIT && echo "[Unicorn @ Redmine] stopped - OK" exit 0 
-        decho "Not running"
+        sig QUIT && echo "[Unicorn @ Redmine] stopped - OK" && exit 0 
+        echo >&2 "[Unicorn @ Redmine] already stopped"
     ;;
     force-stop)
         sig TERM && exit 0
-        decho "Not running"
+        echo >&2 "Not running"
     ;;
     restart)
-        sig QUIT && echo "[Unicorn @ Redmine] restarting - OK"
-        run && echo "[Unicorn @ Redmine] now up and running - OK"
-        exit
+        test -e "$PID" || (echo "[Unicorn @ Redmine] is apparently not running, starting " && run && echo "[Unicorn @ Redmine] now up and running - OK" && exit 0)
+        sig QUIT && echo "[Unicorn @ Redmine] restarting - OK" && sleep 3 && run && echo "[Unicorn @ Redmine] now up and running - OK" && exit 0
     ;;
     
     reload)
-        sig HUP && echo "[Unicorn @ Redmine] reloaded - OK" && exit 0
-        decho "Couldn't reload, starting unicorn instead"
-        run 
-        exit
+        sig USR2 && sleep 3 && oldsig QUIT && echo "[Unicorn @ Redmine] reloaded - OK" && exit 0
+        echo >&2 "[Unicorn @ Redmine] couldn't reload, restart required" && exit 1
     ;;
     rotate)
         sig USR1 && echo "[Unicorn @ Redmine] rotated logs - OK" && exit 0
-        decho "Couldn't rotate logs" && exit 1
+        echo >&2 "[Unicorn @ Redmine] couldn't rotate logs" && exit 1
     ;;
     *)
-        echo "Usage: $0 <start|stop|restart|rotate|force-stop>"
+        echo "Usage: $0 <status|start|stop|restart|reload|rotate|force-stop>"
         exit 1
     ;;
 esac
