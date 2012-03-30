@@ -16,6 +16,8 @@ default[:redmine] = {
   },
   :ruby => "ruby-1.8.7-p330@redmine",
   :rmagick => "disabled"
+  :nginx_filenames => ["redmine.conf"],
+  :nginx_listen => ["#{node[:ipaddress]}:80"]
 }
 
 set_unless[:redmine][:app_server_name] = "redmine.#{node[:fqdn]}"

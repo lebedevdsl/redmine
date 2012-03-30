@@ -3,7 +3,7 @@ upstream redmine {
 }
 
 server {
-  listen 80;
+  listen <%= node[:redmine][:nginx_listen] %>;
   server_name <%= node[:redmine][:app_server_name] %>;
 
   location / {
