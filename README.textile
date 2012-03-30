@@ -9,7 +9,7 @@ Currently ther is only one recipe.
 
 h3. Attributes
 
-[:redmine][:app_path] - application path
-[:redmine][:release_tag] - repository tag for fetching defined release
-[:redmine][:ruby] - ruby version for run redmine
-[:redmine][:rmagick] - adds rmagick support if enabled
+* [:redmine][:app_path] - application path
+* [:redmine][:release_tag] - repository tag for fetching defined release
+* [:redmine][:ruby] - ruby version for run redmine
+* [:redmine][:rmagick] - adds rmagick support if enabled
