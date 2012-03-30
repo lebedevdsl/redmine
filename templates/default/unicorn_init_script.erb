@@ -56,7 +56,7 @@ case ${1-help} in
         echo >&2 "Not running"
     ;;
     restart)
-        test -e "$PID" || (echo "[Unicorn @ Redmine] is apparently not running, starting " && run && echo "[Unicorn @ Redmine] now up and running - OK" && exit 0)
+        test -e "$PID" || (echo "[Unicorn @ Redmine] is apparently not running"  && exit 0 )
         sig QUIT && echo "[Unicorn @ Redmine] restarting - OK" && sleep 3 && run && echo "[Unicorn @ Redmine] now up and running - OK" && exit 0
     ;;
     
