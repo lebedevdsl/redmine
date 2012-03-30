@@ -111,7 +111,6 @@ template "#{node[:redmine][:app_path]}/config/configuration.yml" do
   owner "www-data"
   group "www-data"
   mode  "0644"
-  notifies :reload, resources(:service => "unicorn_redmine")
 end
 
 # Redmine unicorn configuration
@@ -120,7 +119,6 @@ template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
   owner "www-data"
   group "www-data"
   mode  "0644"
-  notifies :restart, resources(:service => "unicorn_redmine"), :immediately
 end
 
 # Redmine database configuration
@@ -152,7 +150,7 @@ unless node[:redmine][:db].any?{|key, value| value == ""}
     ruby_string node[:redmine][:ruby]
     cwd node[:redmine][:app_path]
     code "rake db:migrate RAILS_ENV=production"
-    notifies :restart, resources(:service => "unicorn_redmine")
+    notifies [:enable, :start], resources(:service => "unicorn_redmine")
   end
 end
 
