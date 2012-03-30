@@ -15,7 +15,7 @@ default[:redmine] = {
     :db_pass => ""
   },
   :ruby => "ruby-1.8.7-p330@redmine",
-  :rmagick => "disabled"
+  :rmagick => "disabled",
   :nginx_filenames => ["redmine.conf"],
   :nginx_listen => ["#{node[:ipaddress]}:80"]
 }
