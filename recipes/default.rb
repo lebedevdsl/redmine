@@ -24,8 +24,7 @@ REQUIRED_GEMS = {
   "rails"   => "2.3.14",
   "rack"    => "1.1.3",
   "unicorn" => nil,
-  "rubytree" => "0.5.2" ,
-  "mysql" => nil
+  "rubytree" => "0.5.2" 
   }
 
 # Optional prerequisites for RMagick
@@ -41,11 +40,18 @@ include_recipe 'rvm::system_install'
 
 # Automatically select and install prerequisites for db support
 # according to attributes. Defaults to mysql
-# TODO: postgresql
 case node['redmine']['db']['type']
-when "mysql"
-  package 'mysql-client'
-  package "libmysqlclient-dev"
+  when "mysql"
+    rvm_gem "mysql" do
+      ruby_string node['redmine']['ruby']
+    end
+    package 'mysql-client'
+    package "libmysqlclient-dev"  
+  when "postgresql"
+    rvm_gem "pg" do
+      ruby_string node['redmine']['ruby']
+    end
+    package "libpq-dev"
 end
 
 
