@@ -1,17 +1,17 @@
 worker_processes 2
-working_directory "<%= node[:redmine][:app_path] %>"
+working_directory "<%= node['redmine']['app_path'] %>"
 user "www-data", "www-data"
  
 preload_app true
 
 timeout 30
 
-listen "<%= "#{node[:redmine][:app_path]}#{node[:redmine][:unicorn_conf][:sock]}" %>", :backlog => 64
+listen "<%= "#{node['redmine']['app_path']}#{node['redmine']['unicorn_conf']['sock']}" %>", :backlog => 64
 
-pid "<%= "#{node[:redmine][:app_path]}#{node[:redmine][:unicorn_conf][:pid]}" %>"
+pid "<%= "#{node['redmine']['app_path']}#{node['redmine']['unicorn_conf']['pid']}" %>"
 
-stderr_path "<%= "#{node[:redmine][:app_path]}#{node[:redmine][:unicorn_conf][:error_log]}" %>"
-stdout_path "<%= "#{node[:redmine][:app_path]}#{node[:redmine][:unicorn_conf][:access_log]}"%>"
+stderr_path "<%= "#{node['redmine']['app_path']}#{node['redmine']['unicorn_conf']['error_log']}" %>"
+stdout_path "<%= "#{node['redmine']['app_path']}#{node['redmine']['unicorn_conf']['access_log']}"%>"
 
 before_fork do |server, worker|
   defined?(ActiveRecord::Base) and ActiveRecord::Base.connection.disconnect!
