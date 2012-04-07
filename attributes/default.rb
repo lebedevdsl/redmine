@@ -22,6 +22,7 @@ default['redmine'] = {
 
 set_unless['redmine']['app_server_name'] = "redmine.#{node['fqdn']}"
 set_unless['redmine']['db'] = {
+  'type' => "mysql",
   'db_name' => "",
   'db_host' => "",
   'db_user' => "",
