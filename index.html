@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Redmine by lebedevdsl</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Redmine</h1>
+        <p>Chef cookbook for installing/configuring redmine instance</p>
+        <p class="view"><a href="https://github.com/lebedevdsl/redmine">View the Project on GitHub <small>lebedevdsl/redmine</small></a></p>
+        <ul>
+          <li><a href="https://github.com/lebedevdsl/redmine/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/lebedevdsl/redmine/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/lebedevdsl/redmine">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Redmine Cookbook</h1>
+
+<h2>Description</h2>
+
+<p>Chef cookbook for deploying redmine instance
+Currently there is only one recipe:</p>
+
+<ul>
+<li>redmine::default - installs and configures redmine 1.3.1 on nginx-&gt;unicorn</li>
+</ul><h3>Attributes</h3>
+
+<ul>
+<li>['redmine']['app_path'] - application path</li>
+<li>['redmine']['release_tag'] - repository tag for fetching defined release</li>
+<li>['redmine']['ruby'] - ruby version for run redmine</li>
+<li>['redmine']['rmagick'] - adds rmagick support if enabled</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/lebedevdsl">lebedevdsl</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+  </body>
+</html>
