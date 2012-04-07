@@ -1,13 +1,15 @@
-h1. Redmine Cookbook 
+Redmine Cookbook 
+================
 
-h2. Description
+Description
+-----------
 
 Chef cookbook for deploying redmine instance
 Currently ther is only one recipe.
 
 * redmine::default - installs and configures redmine 1.3.1 on nginx->unicorn
 
-h3. Attributes
+### Attributes
 
 * [:redmine][:app_path] - application path
 * [:redmine][:release_tag] - repository tag for fetching defined release

@@ -29,10 +29,10 @@ REQUIRED_GEMS = {
   }
 
 # Optional prerequisites for RMagick
-if node[:redmine][:rmagick] == "enabled"
+if node['redmine']['rmagick'] == "enabled"
   package "libmagick9-dev"
   rvm_gem "rmagick" do
-    ruby_string node[:redmine][:ruby]
+    ruby_string node['redmine']['ruby']
   end
 end
 
@@ -42,11 +42,12 @@ include_recipe 'rvm::system_install'
 # Automatically select and install prerequisites for db support
 # according to attributes. Defaults to mysql
 # TODO: postgresql
-case node[:redmine][:db][:type]
+case node['redmine']['db']['type']
 when "mysql"
   package 'mysql-client'
   package "libmysqlclient-dev"
 end
+
 
 # Unnicorn for redmine service definition
 service "unicorn_redmine" do
@@ -55,34 +56,34 @@ service "unicorn_redmine" do
 end
 
 # Ensure app-directory is present and have right ownership
-directory node[:redmine][:app_path] do
+directory node['redmine']['app_path'] do
   action :create
   owner "www-data"
   group "www-data"
 end
 
 # Exporting defined redmine version from git mirror https://github.com/redmine/redmine
-git node[:redmine][:app_path] do
+git node['redmine']['app_path'] do
   action :export
   user 'www-data'
   group 'www-data'
   repository "https://github.com/redmine/redmine"
-  revision node[:redmine][:release_tag]
+  revision node['redmine']['release_tag']
 end
 
 # Installing rvm 1.8.7 ruby and creating gemset
-rvm_environment node[:redmine][:ruby]
+rvm_environment node['redmine']['ruby']
 
 # Installing gems for rvm environment
 REQUIRED_GEMS.each do |gem, version|
   rvm_gem gem do
-    ruby_string node[:redmine][:ruby]
+    ruby_string node['redmine']['ruby']
     version version if version
   end
 end
 
 # Deploying rvm env autoswitcher to app_path
-template "#{node[:redmine][:app_path]}/.rvmrc" do
+template "#{node['redmine']['app_path']}/.rvmrc" do
   source ".rvmrc.erb"
   owner "www-data"
   group "www-data"
@@ -93,7 +94,7 @@ script "trust_rvmrc" do
   interpreter "bash"
   code <<-EOF
   source /etc/profile
-  rvm rvmrc trust #{node[:redmine][:app_path]}
+  rvm rvmrc trust #{node['redmine']['app_path']}
   EOF
 end
 
@@ -106,7 +107,7 @@ template "/etc/init.d/unicorn_redmine" do
 end
 
 # Redmine configuration for SCM and mailing
-template "#{node[:redmine][:app_path]}/config/configuration.yml" do
+template "#{node['redmine']['app_path']}/config/configuration.yml" do
   source "configuration.yml.erb"
   owner "www-data"
   group "www-data"
@@ -114,7 +115,7 @@ template "#{node[:redmine][:app_path]}/config/configuration.yml" do
 end
 
 # Redmine unicorn configuration
-template "#{node[:redmine][:app_path]}/config/unicorn.rb" do
+template "#{node['redmine']['app_path']}/config/unicorn.rb" do
   source "unicorn.rb.erb"
   owner "www-data"
   group "www-data"
@@ -123,7 +124,7 @@ end
 
 # Redmine database configuration
 # TODO: postgresql
-template "#{node[:redmine][:app_path]}/config/database.yml" do
+template "#{node['redmine']['app_path']}/config/database.yml" do
   source "database.yml.erb"
   owner "www-data"
   group "www-data"
@@ -131,7 +132,7 @@ template "#{node[:redmine][:app_path]}/config/database.yml" do
 end
 
 # fix ownership for public/plugin_assets due to deployment order
-directory "#{node[:redmine][:app_path]}/public/plugin_assets" do
+directory "#{node['redmine']['app_path']}/public/plugin_assets" do
   owner "www-data"
   group "www-data"
   mode  "0755"
@@ -139,19 +140,18 @@ end
 
 # http://www.redmine.org/projects/redmine/wiki/RedmineInstall step 4
 rvm_shell "rake_task:generate_session_store" do
-  ruby_string node[:redmine][:ruby]
-  cwd node[:redmine][:app_path]
+  ruby_string node['redmine']['ruby']
+  cwd node['redmine']['app_path']
   code "rake generate_session_store"
 end
 
 # http://www.redmine.org/projects/redmine/wiki/RedmineInstall step 5 - migrating DB 
-unless node[:redmine][:db].any?{|key, value| value == ""}
-  rvm_shell "rake_task:db:migrate RAILS_ENV=production" do
-    ruby_string node[:redmine][:ruby]
-    cwd node[:redmine][:app_path]
-    code "rake db:migrate RAILS_ENV=production"
-    notifies [:enable, :start], resources(:service => "unicorn_redmine")
-  end
+rvm_shell "rake_task:db:migrate RAILS_ENV=production" do
+  ruby_string node['redmine']['ruby']
+  cwd node['redmine']['app_path']
+  code "rake db:migrate RAILS_ENV=production"
+  notifies [:enable, :start], resources(:service => "unicorn_redmine")
+  not_if node['redmine']['db'].any?{|key, value| value == ""}
 end
 
 # Nginx configuration
@@ -161,13 +161,12 @@ end
 
 # linking app_path to default virtual-hosts location
 link "/var/www/virtual-hosts/redmine" do
-  to node[:redmine][:app_path]
+  to node['redmine']['app_path']
 end
 
 # In case of nginx recipe usage - reload nginx after linking available to enabled
-if node[:nginx]
-  link "/etc/nginx/sites-enabled/redmine.conf" do
-    to "/etc/nginx/sites-available/redmine.conf"
-    notifies :reload, resources(:service => "nginx")
-  end
+link "/etc/nginx/sites-enabled/redmine.conf" do
+  to "/etc/nginx/sites-available/redmine.conf"
+  notifies :reload, resources(:service => "nginx")
+  only_if node['nginx']
 end
